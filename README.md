@@ -49,27 +49,31 @@ Setup - Section below describe settting up entire system
   
         b. Build Docker Images  	: Issue following dommands from database folder . T
 
-	        i.  docker build -t assignemntmysql .
-	        ii. docker run -d -p 3306:3306 --name assignemntmysql -e MYSQL_ROOT_PASSWORD=takeaway assignemntmysql
+	   i.  docker build -t assignemntmysql .
+	   ii. docker run -d  --net=mysqlnet -p 3306:3306 --name assignemntmysql -e MYSQL_ROOT_PASSWORD=takeaway assignemntmysql
 				
 3. oauthserver - This is a authoziation server . A simple sping authoziation server is used here . Follow the steps below to compile the code , build the image and run the server.
 
          a. Compile authoziation server - go to root directory i.e oauthserver directory
       
-         b. Issue maven commands to package it by issuing following commands 
-		mvn clean compile package 
-         c. Now go to Docker directory under oauthserver . It now conatins 3 artifacts - Dockerfile , env.list and newly create     					authorizationServer.jar
+         b. Issue maven commands to package it by issuing following commands mvn clean compile package 
+		
+         c. Now go to Docker directory under oauthserver . It now conatins 3 artifacts - Dockerfile , env.list and newly create     	    authorizationServer.jar
+	 
           d. Modify env.list - This file contains clientid and client secret , there is no need to change unless you want to  
-          create a different clientid and client secret. It also conatins LOG_LEVEL. It is set to DEBUG . 
+         	 create a different clientid and client secret. It also conatins LOG_LEVEL. It is set to DEBUG . 
      		If you need you can change the LOG_LEVEL to INFO or other valid log levels .
+		
 		
           e. Issue following command to build the docker images . From oauthserver/Docker folder , issue command below
 		
 	        docker build -t oauthserver .
 		
+		
            f. Execute the oauth server - To run docker image of oauthserver issue coomand below 
 
 	        docker run -d -p 8080:8080 --name oauthserver --env-file env.list oauthserver
+		
 		
 4.  employeesrvc - Before running employee-service , kindly make sure kafka and database servers are running . Following steps are required to perform to run this service.
 	
@@ -95,9 +99,35 @@ Setup - Section below describe settting up entire system
 			
  	        d. Run employeesrvc container - Run following command to execute the employee service
 			
-			
-	
 		
+		docker run -d --net=mysqlnet --name=employeesrvc -p 8081:8080 --env-file env.list employeesrvc
+
+5.eventsrvc  - Before running event-service , kindly make sure kafka and database servers are running . Following steps are required to perform to run this service.
+	
+	        a. Compile and package - Go to root directory( eventsrvc directory ) and isssue following command 
+			
+	                mvn clean compile package  
+			
+	       			
+	        b. Build docker image - Go to the Docker directory under eventsrvc folder (i.e eventsrvc/Docker ) . 
+	        Issue following commands to build docker image
+	
+	        docker build -t c . 
+	
+	        c. Change env.list file - This file conatains all environment properties required to run event-service .
+			
+		        i . Modify 18.216.28.244 ip with your host ip address in KAFKA_SERVER=18.216.28.244:9092 
+			
+		ii. There is no change is required to rest of the properties unless change any of those in while creating kafka
+		or mysql.
+			
+ 	        d. Run eventsrvc container - Run following command to execute the employee service
+			
+		
+		docker run -d --net=mysqlnet --name=eventsrvc -p 8082:8080 --env-file env.list eventsrvc
+
+	
+
 
 Testing Steps -
 

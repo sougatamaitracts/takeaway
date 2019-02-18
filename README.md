@@ -131,8 +131,70 @@ Setup - Section below describe settting up entire system
 
 Testing Steps -
 
+In order to Test secured service you first need to get the token . In order to get the token kindly use post-man / Chrome ARC / curl . To get token you need to call followings
 
-Known Issues - 
+	A . GET TOKEN 
+		1.  ouath token get URL -   http://<<oauth-server-host-ip>:8080/oauth/token?grant_type=client_credentials 
+		
+		2.  Use Method POST
+		
+		3.  Add  header 
+			
+			i . Basic Authorzation is used . For that create base64 encoding of clientid:clientsecret 
+			as example if clientid is takeawayapi and clientsecret is takeawaysecret then Authorization header will
+			be - Basic dGFrZWF3YXlhcGk6dGFrZWF3YXlzZWNyZXQ=
+		
+		4. Once request is successful take value of access_token key from resonse.
+		
+
+	B. Call Secure APIs
+		
+		1. Once you get access_token in all subsequesnt secured call will take Bearer Token as Authorization Value.
+		
+			As example, for post / put / delete method will take Bearer <Token_value> as Authorization Header.
+			
+Sample Request Information  for Testing - 
+
+a. Create Employee
+
+	URL : http://<employee-service-host>:8081/secured/employee
+	Method : POST
+	Body :	  {
+  			"uuid": 0,
+  			"email": "testsample123@yahoo.com",
+			  "firstName": "FNAME",
+			  "lastName": "LNAME",
+			  "dateOfBirth": null
+		   }
+
+b. Get Employee :
+		
+	URL:	http://<employee-service-host>:8081/secured/employee/3
+	Method:	GET
+
+c. Update Employe	
+		
+	URL: http://<employee-service-host>:8081/secured/employee/3
+	Method: PUT 
+	{
+	  "uuid": 3,
+	  "email": "modified@yahoo.com",
+	  "firstName": "FNAME",
+	  "lastName": "LNAME",
+	  "dateOfBirth": null
+	}
+
+d. Delete Employee 
+
+	URL:http://<employee-service-host>:8081/secured/employee/3
+	Method: DELETE
+	
+API Documentation 
+
+Swagger UI for Employee Service is available in http://<employee-service-host>:8081/swagger-ui.html
+	
+Swagger File for Employee Service is available in http://<employee-service-host>:8081/v2/api-docs
+
 
 
 
